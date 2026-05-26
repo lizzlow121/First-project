@@ -69,7 +69,8 @@ export function RaceForm({ defaultValues, onSubmit, onCancel, loading }: RaceFor
     setValue,
     formState: { errors },
   } = useForm<FormValues>({
-    resolver: zodResolver(schema),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: zodResolver(schema) as any,
     defaultValues: {
       name: defaultValues?.name ?? "",
       race_type: defaultValues?.race_type ?? "other",
@@ -102,10 +103,12 @@ export function RaceForm({ defaultValues, onSubmit, onCancel, loading }: RaceFor
     }
   }, [raceSubtype, raceType, setValue]);
 
-  const handleFormSubmit = async (values: FormValues) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleFormSubmit = async (values: any) => {
+    const v = values as FormValues;
     await onSubmit({
-      name: values.name,
-      race_type: values.race_type as RaceType,
+      name: v.name,
+      race_type: v.race_type as RaceType,
       race_subtype: (values.race_subtype as RaceSubtype) ?? null,
       race_date: values.race_date,
       location: values.location ?? null,

@@ -24,6 +24,8 @@ const demoRace: Race = {
   result_rating: null,
   result_notes: null,
   result_logged_at: null,
+  share_slug: null,
+  shared_at: null,
   created_at: new Date().toISOString(),
 };
 

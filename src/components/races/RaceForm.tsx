@@ -120,6 +120,8 @@ export function RaceForm({ defaultValues, onSubmit, onCancel, loading }: RaceFor
       result_rating: null,
       result_notes: null,
       result_logged_at: null,
+      share_slug: null,
+      shared_at: null,
     });
   };
 

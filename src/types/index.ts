@@ -36,6 +36,8 @@ export interface Race {
   result_rating: number | null;
   result_notes: string | null;
   result_logged_at: string | null;
+  share_slug: string | null;
+  shared_at: string | null;
   created_at: string;
 }
 

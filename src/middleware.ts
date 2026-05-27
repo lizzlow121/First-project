@@ -31,7 +31,7 @@ export async function middleware(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
   const isAuthRoute = pathname.startsWith("/login") || pathname.startsWith("/signup");
-  const isPreview = pathname.startsWith("/preview");
+  const isPreview = pathname.startsWith("/preview") || pathname.startsWith("/share");
   const isAppRoute = !isPreview && (
     pathname.startsWith("/dashboard") ||
     pathname.startsWith("/races") ||

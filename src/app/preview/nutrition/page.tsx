@@ -30,7 +30,7 @@ export default function PreviewNutrition() {
 
         <MacroProgressBars
           totals={{ calories: 1840, protein_g: 142, carbs_g: 245, fat_g: 38 }}
-          goals={{ id: "", user_id: "", calories_target: 2640, protein_g: 180, carbs_g: 375, fat_g: 49, updated_at: "" }}
+          goals={{ calories_target: 2640, protein_g: 180, carbs_g: 375, fat_g: 49 }}
         />
 
         {[

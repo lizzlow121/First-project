@@ -6,6 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { PaceReferenceCard } from "@/components/races/PaceReferenceCard";
 import { GeneratePlanButton } from "@/components/races/GeneratePlanButton";
 import { RaceResultForm } from "@/components/races/RaceResultForm";
+import { ShareRaceButton } from "@/components/races/ShareRaceButton";
 import { MapPin, Calendar, Target, Trophy, Activity } from "lucide-react";
 import { format } from "date-fns";
 import type { Race, TrainingSession } from "@/types";
@@ -135,6 +136,7 @@ export default async function RaceDetailPage({
                 {raceTypeLabel(race.race_type)}
               </Badge>
               {isPast && <Badge variant="default">Completed</Badge>}
+              <div className="ml-auto"><ShareRaceButton race={race} /></div>
             </div>
 
             <div className="flex flex-wrap gap-4 mt-2">

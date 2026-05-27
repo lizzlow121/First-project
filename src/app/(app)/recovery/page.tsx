@@ -2,12 +2,17 @@
 
 import { useRecovery } from "@/hooks/useRecovery";
 import { useWeightLogs } from "@/hooks/useWeightLogs";
+import { useBloodwork } from "@/hooks/useBloodwork";
 import { RecoveryLogForm } from "@/components/recovery/RecoveryLogForm";
 import { SupplementTracker } from "@/components/recovery/SupplementTracker";
 import { BodyMeasurementsForm } from "@/components/recovery/BodyMeasurementsForm";
+import { BloodworkUpload } from "@/components/recovery/BloodworkUpload";
+import { BloodworkAnalysisCard } from "@/components/recovery/BloodworkAnalysis";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
 import { format, subDays } from "date-fns";
 import { useState } from "react";
+import type { BloodworkAnalysis } from "@/types";
 
 function TrendBar({ value, max = 10 }: { value: number | null; max?: number }) {
   if (value === null) {
@@ -50,8 +55,20 @@ function TrendBar({ value, max = 10 }: { value: number | null; max?: number }) {
 export default function RecoveryPage() {
   const { logs } = useRecovery(7);
   const { logs: weightLogs, addLog: addWeightLog, trend: weightTrend } = useWeightLogs(30);
+  const { analyses, deleteAnalysis } = useBloodwork();
+  const [newAnalyses, setNewAnalyses] = useState<BloodworkAnalysis[]>([]);
   const [weightInput, setWeightInput] = useState("");
   const [savingWeight, setSavingWeight] = useState(false);
+
+  const handleAnalysisComplete = (result: BloodworkAnalysis) => {
+    setNewAnalyses((prev) => [result, ...prev]);
+  };
+
+  // Merge newly added analyses with fetched ones (deduplicate by id)
+  const allAnalyses = [
+    ...newAnalyses,
+    ...analyses.filter((a) => !newAnalyses.some((n) => n.id === a.id)),
+  ];
 
   const todayWeight = weightLogs[0]?.log_date === format(new Date(), "yyyy-MM-dd")
     ? weightLogs[0]
@@ -227,6 +244,35 @@ export default function RecoveryPage() {
           <SupplementTracker />
         </CardContent>
       </Card>
+
+      {/* Bloodwork Analysis */}
+      <BloodworkUpload onAnalysisComplete={handleAnalysisComplete} />
+
+      {/* Past analyses */}
+      {allAnalyses.length > 0 && (
+        <div className="space-y-4">
+          {allAnalyses.map((analysis) => (
+            <div key={analysis.id} className="relative">
+              <BloodworkAnalysisCard analysis={analysis} />
+              <div className="absolute top-4 right-4">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    deleteAnalysis(analysis.id);
+                    setNewAnalyses((prev) => prev.filter((a) => a.id !== analysis.id));
+                  }}
+                  className="text-xs"
+                  style={{ color: "var(--color-text-muted)" }}
+                >
+                  Delete
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

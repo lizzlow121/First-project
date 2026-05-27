@@ -1,31 +1,29 @@
 "use client";
 
 import { useCountdown } from "@/hooks/useCountdown";
+import { SandTimer } from "@/components/dashboard/SandTimer";
 
 export function ShareCountdown({ raceDate }: { raceDate: string }) {
   const c = useCountdown(raceDate);
 
   return (
     <div className="rounded-2xl bg-[var(--color-surface-2)] border border-[var(--color-border)] p-6">
-      <p className="text-xs text-[var(--color-text-muted)] uppercase tracking-wider mb-3">
+      <p className="text-xs text-[var(--color-text-muted)] uppercase tracking-wider mb-4">
         Countdown
       </p>
-      <div className="flex justify-between gap-2">
-        {[
-          { val: c.days, label: "days" },
-          { val: c.hours, label: "hours" },
-          { val: c.minutes, label: "mins" },
-          { val: c.seconds, label: "secs" },
-        ].map(({ val, label }) => (
-          <div key={label} className="flex-1 text-center">
-            <p className="text-4xl font-bold tabular-nums leading-none">
-              {val.toString().padStart(2, "0")}
-            </p>
-            <p className="text-[10px] text-[var(--color-text-muted)] uppercase mt-1.5">
-              {label}
-            </p>
+      <div className="flex items-center gap-6">
+        <SandTimer raceDate={raceDate} size={96} />
+        <div className="flex-1 min-w-0">
+          <div className="flex items-baseline gap-2">
+            <span className="text-6xl font-bold tabular-nums leading-none">{c.days}</span>
+            <span className="text-sm font-medium text-[var(--color-text-muted)] uppercase tracking-wider">
+              day{c.days !== 1 ? "s" : ""}
+            </span>
           </div>
-        ))}
+          <p className="text-base text-[var(--color-text-secondary)] tabular-nums mt-3">
+            {c.hours}h {c.minutes}m {c.seconds.toString().padStart(2, "0")}s
+          </p>
+        </div>
       </div>
     </div>
   );

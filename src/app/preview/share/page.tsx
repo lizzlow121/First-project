@@ -1,5 +1,6 @@
 import { Trophy, MapPin, Calendar, Target, Zap } from "lucide-react";
 import { format, addDays } from "date-fns";
+import { SandTimer } from "@/components/dashboard/SandTimer";
 
 export default function PreviewShare() {
   const raceDate = addDays(new Date(), 28);
@@ -25,19 +26,16 @@ export default function PreviewShare() {
           </div>
 
           <div className="rounded-2xl bg-[var(--color-surface-2)] border border-[var(--color-border)] p-6">
-            <p className="text-xs text-[var(--color-text-muted)] uppercase tracking-wider mb-3">Countdown</p>
-            <div className="flex justify-between gap-2">
-              {[
-                { val: 28, label: "days" },
-                { val: 14, label: "hours" },
-                { val: 32, label: "mins" },
-                { val: 18, label: "secs" },
-              ].map(({ val, label }) => (
-                <div key={label} className="flex-1 text-center">
-                  <p className="text-4xl font-bold tabular-nums leading-none">{val.toString().padStart(2, "0")}</p>
-                  <p className="text-[10px] text-[var(--color-text-muted)] uppercase mt-1.5">{label}</p>
+            <p className="text-xs text-[var(--color-text-muted)] uppercase tracking-wider mb-4">Countdown</p>
+            <div className="flex items-center gap-6">
+              <SandTimer raceDate={format(raceDate, "yyyy-MM-dd")} size={96} />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-6xl font-bold tabular-nums leading-none">28</span>
+                  <span className="text-sm font-medium text-[var(--color-text-muted)] uppercase tracking-wider">days</span>
                 </div>
-              ))}
+                <p className="text-base text-[var(--color-text-secondary)] tabular-nums mt-3">14h 32m 18s</p>
+              </div>
             </div>
           </div>
 

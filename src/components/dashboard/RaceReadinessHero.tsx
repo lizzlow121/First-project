@@ -5,6 +5,7 @@ import type { Race } from "@/types";
 import { formatGoalTime, weeksUntil } from "@/lib/utils";
 import { Trophy, Clock } from "lucide-react";
 import Link from "next/link";
+import { SandTimer } from "./SandTimer";
 
 interface RaceReadinessHeroProps {
   race: Race | null;
@@ -58,24 +59,23 @@ export function RaceReadinessHero({ race, readinessScore }: RaceReadinessHeroPro
         )}
       </div>
 
-      {/* Countdown */}
-      <div className="flex items-end gap-4">
-        <div className="flex gap-3">
-          {[
-            { val: countdown.days, label: "days" },
-            { val: countdown.hours, label: "hrs" },
-            { val: countdown.minutes, label: "min" },
-            { val: countdown.seconds, label: "sec" },
-          ].map(({ val, label }) => (
-            <div key={label} className="flex flex-col items-center">
-              <span className="text-3xl font-bold tabular-nums leading-none">{val.toString().padStart(2, "0")}</span>
-              <span className="text-[10px] text-[var(--color-text-muted)] uppercase mt-1">{label}</span>
-            </div>
-          ))}
+      {/* Sand timer countdown */}
+      <div className="flex items-center gap-6">
+        <SandTimer raceDate={race.race_date} size={88} />
+        <div className="flex-1 min-w-0">
+          <div className="flex items-baseline gap-2">
+            <span className="text-5xl font-bold tabular-nums leading-none">{countdown.days}</span>
+            <span className="text-sm font-medium text-[var(--color-text-muted)] uppercase tracking-wider">
+              day{countdown.days !== 1 ? "s" : ""}
+            </span>
+          </div>
+          <p className="text-sm text-[var(--color-text-secondary)] tabular-nums mt-2">
+            {countdown.hours}h {countdown.minutes}m {countdown.seconds.toString().padStart(2, "0")}s
+          </p>
+          <p className="text-xs text-[var(--color-text-muted)] mt-1">
+            {weeks} week{weeks !== 1 ? "s" : ""} to go
+          </p>
         </div>
-        <span className="text-sm text-[var(--color-text-muted)] mb-1">
-          {weeks} week{weeks !== 1 ? "s" : ""} to go
-        </span>
       </div>
 
       {/* Readiness bar */}

@@ -55,8 +55,12 @@ export default function RacesPage() {
 
   const handleAdd = async (data: Omit<Race, "id" | "user_id" | "created_at">) => {
     setAddLoading(true);
-    await addRace(data);
+    const { error } = await addRace(data);
     setAddLoading(false);
+    if (error) {
+      alert(`Failed to save race: ${error.message}`);
+      return;
+    }
     setShowAdd(false);
   };
 

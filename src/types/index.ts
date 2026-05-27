@@ -284,3 +284,38 @@ export interface Podcast {
   url: string;
   category: "endurance" | "strength" | "mindset" | "nutrition" | "hyrox";
 }
+
+export interface BloodworkMarker {
+  name: string;
+  value: string;
+  status: "optimal" | "low" | "high" | "deficient" | "elevated";
+  reference_range: string;
+  athletic_impact: string;
+  priority: "high" | "medium" | "low";
+}
+
+export interface BloodworkSuggestion {
+  action: "add" | "increase" | "decrease" | "remove" | "maintain";
+  supplement: string;
+  dose: string;
+  timing: string;
+  reason: string;
+  markers_addressed: string[];
+}
+
+export interface BloodworkResult {
+  summary: string;
+  markers: BloodworkMarker[];
+  suggestions: BloodworkSuggestion[];
+  already_optimal: { supplement: string; assessment: string }[];
+}
+
+export interface BloodworkAnalysis {
+  id: string;
+  user_id: string;
+  filename: string;
+  analyzed_at: string;
+  summary: string | null;
+  analysis: BloodworkResult;
+  created_at: string;
+}

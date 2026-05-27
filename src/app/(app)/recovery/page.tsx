@@ -1,11 +1,13 @@
 "use client";
 
 import { useRecovery } from "@/hooks/useRecovery";
+import { useWeightLogs } from "@/hooks/useWeightLogs";
 import { RecoveryLogForm } from "@/components/recovery/RecoveryLogForm";
 import { SupplementTracker } from "@/components/recovery/SupplementTracker";
 import { BodyMeasurementsForm } from "@/components/recovery/BodyMeasurementsForm";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { format, subDays } from "date-fns";
+import { useState } from "react";
 
 function TrendBar({ value, max = 10 }: { value: number | null; max?: number }) {
   if (value === null) {
@@ -47,6 +49,43 @@ function TrendBar({ value, max = 10 }: { value: number | null; max?: number }) {
 
 export default function RecoveryPage() {
   const { logs } = useRecovery(7);
+  const { logs: weightLogs, addLog: addWeightLog, trend: weightTrend } = useWeightLogs(30);
+  const [weightInput, setWeightInput] = useState("");
+  const [savingWeight, setSavingWeight] = useState(false);
+
+  const todayWeight = weightLogs[0]?.log_date === format(new Date(), "yyyy-MM-dd")
+    ? weightLogs[0]
+    : null;
+
+  const last7Weights = weightLogs.slice(0, 7);
+  const avgWeight =
+    last7Weights.length > 0
+      ? last7Weights.reduce((s, l) => s + l.weight_kg, 0) / last7Weights.length
+      : null;
+
+  const handleLogWeight = async () => {
+    const kg = parseFloat(weightInput);
+    if (isNaN(kg) || kg <= 0) return;
+    setSavingWeight(true);
+    await addWeightLog(kg);
+    setSavingWeight(false);
+    setWeightInput("");
+  };
+
+  const trendIcon =
+    weightTrend === "up"
+      ? "↑"
+      : weightTrend === "down"
+        ? "↓"
+        : weightTrend === "stable"
+          ? "→"
+          : null;
+  const trendColor =
+    weightTrend === "up"
+      ? "var(--color-amber)"
+      : weightTrend === "down"
+        ? "var(--color-green)"
+        : "var(--color-text-muted)";
 
   // Last 7 days for trend display
   const last7 = Array.from({ length: 7 }, (_, i) => {
@@ -113,6 +152,66 @@ export default function RecoveryPage() {
         </CardHeader>
         <CardContent className="pt-4">
           <RecoveryLogForm />
+        </CardContent>
+      </Card>
+
+      {/* Weight tracking */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Weight</CardTitle>
+        </CardHeader>
+        <CardContent className="pt-4 space-y-3">
+          {/* Today's log */}
+          {todayWeight ? (
+            <p className="text-sm text-[var(--color-text-primary)]">
+              Today:{" "}
+              <span className="font-semibold">{todayWeight.weight_kg} kg</span>
+            </p>
+          ) : (
+            <div className="flex gap-2 items-center">
+              <input
+                type="number"
+                step="0.1"
+                min="20"
+                max="300"
+                placeholder="kg"
+                value={weightInput}
+                onChange={(e) => setWeightInput(e.target.value)}
+                className="w-24 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-2)] px-3 py-2 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)]"
+              />
+              <button
+                onClick={handleLogWeight}
+                disabled={savingWeight || !weightInput}
+                className="rounded-lg bg-[var(--color-accent)] px-3 py-2 text-xs font-medium text-white disabled:opacity-50 hover:opacity-90 transition-opacity"
+              >
+                {savingWeight ? "Saving…" : "Log weight"}
+              </button>
+            </div>
+          )}
+
+          {/* Trend indicator */}
+          {avgWeight !== null && (
+            <div className="flex items-center gap-2">
+              <span
+                className="text-sm font-medium"
+                style={{ color: "var(--color-text-secondary)" }}
+              >
+                7-day avg:{" "}
+                <span style={{ color: "var(--color-text-primary)" }}>
+                  {avgWeight.toFixed(1)} kg
+                </span>
+              </span>
+              {trendIcon && (
+                <span
+                  className="text-base font-bold"
+                  style={{ color: trendColor }}
+                  title={`Trend: ${weightTrend}`}
+                >
+                  {trendIcon}
+                </span>
+              )}
+            </div>
+          )}
         </CardContent>
       </Card>
 

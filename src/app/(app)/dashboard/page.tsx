@@ -5,6 +5,8 @@ import { WeeklyTrainingCard } from "@/components/dashboard/WeeklyTrainingCard";
 import { MacroRingCard } from "@/components/dashboard/MacroRingCard";
 import { MotivationCard } from "@/components/dashboard/MotivationCard";
 import { HydrationCard } from "@/components/dashboard/HydrationCard";
+import { DailyJournalCard } from "@/components/dashboard/DailyJournalCard";
+import { IntegrationStatusCard } from "@/components/dashboard/IntegrationStatusCard";
 import { getDailyQuote } from "@/lib/quotes";
 import { getDailyPodcast } from "@/lib/podcasts";
 import {
@@ -34,6 +36,7 @@ export default async function DashboardPage() {
     supplRes,
     supplLogsRes,
     quoteResult,
+    integrationsRes,
   ] = await Promise.all([
     supabase.from("races").select("*").gte("race_date", format(today, "yyyy-MM-dd")).order("race_date").limit(1),
     supabase.from("training_sessions").select("*").gte("session_date", weekStart).lte("session_date", weekEnd),
@@ -43,6 +46,7 @@ export default async function DashboardPage() {
     supabase.from("supplements").select("id").eq("active", true),
     supabase.from("supplement_logs").select("taken_date,supplement_id").gte("taken_date", sevenDaysAgo),
     getDailyQuote(),
+    supabase.from("integrations").select("*"),
   ]);
 
   const nextRace = racesRes.data?.[0] ?? null;
@@ -52,6 +56,7 @@ export default async function DashboardPage() {
   const recoveryLogs = recoveryRes.data ?? [];
   const supplements = supplRes.data ?? [];
   const supplementLogs = supplLogsRes.data ?? [];
+  const integrations = integrationsRes.data ?? [];
   const podcast = getDailyPodcast();
 
   // Macro totals for today
@@ -120,6 +125,8 @@ export default async function DashboardPage() {
         <MacroRingCard totals={totals} goals={goals} />
         <HydrationCard />
         <MotivationCard quote={quoteResult} podcast={podcast} />
+        <DailyJournalCard />
+        <IntegrationStatusCard integrations={integrations} />
       </div>
     </div>
   );

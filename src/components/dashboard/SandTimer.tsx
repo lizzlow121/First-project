@@ -21,10 +21,10 @@ function getUrgency(daysToRace: number): Urgency {
 }
 
 const GRADIENTS = {
-  normal: { from: "#fbbf24", to: "#f97316", glow: "#fb923c" },
-  "final-week": { from: "#fb923c", to: "#ef4444", glow: "#ef4444" },
-  "race-eve": { from: "#f87171", to: "#dc2626", glow: "#ef4444" },
-  "race-day": { from: "#22c55e", to: "#16a34a", glow: "#22c55e" },
+  normal: { from: "#F04E23", to: "#FF8C00", glow: "#F97316" },
+  "final-week": { from: "#EF4444", to: "#F04E23", glow: "#EF4444" },
+  "race-eve": { from: "#DC2626", to: "#EF4444", glow: "#DC2626" },
+  "race-day": { from: "#00B96B", to: "#059669", glow: "#00B96B" },
 };
 
 export function SandTimer({ raceDate, prepDays = 84, size = 96 }: SandTimerProps) {
@@ -104,8 +104,8 @@ export function SandTimer({ raceDate, prepDays = 84, size = 96 }: SandTimerProps
             <stop offset="100%" stopColor={colors.to} />
           </linearGradient>
           <linearGradient id="capGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#525252" />
-            <stop offset="100%" stopColor="#3f3f46" />
+            <stop offset="0%" stopColor="#94A3B8" />
+            <stop offset="100%" stopColor="#CBD5E1" />
           </linearGradient>
           <clipPath id="topChamber">
             <path d="M 22 14 L 78 14 L 52 74 L 48 74 Z" />
@@ -216,7 +216,7 @@ export function SandTimer({ raceDate, prepDays = 84, size = 96 }: SandTimerProps
         <path
           d="M 22 14 L 78 14 L 52 74 L 52 86 L 78 146 L 22 146 L 48 86 L 48 74 Z"
           fill="none"
-          stroke="#52525b"
+          stroke="#CBD5E1"
           strokeWidth="1.5"
           strokeLinejoin="round"
         />

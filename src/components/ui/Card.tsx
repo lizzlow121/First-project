@@ -6,11 +6,11 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function Card({ className, variant = "default", ...props }: CardProps) {
   const variants = {
-    default: "bg-[var(--color-surface-1)] border border-[var(--color-border)] rounded-xl",
-    elevated: "bg-[var(--color-surface-2)] border border-[var(--color-border-light)] rounded-xl shadow-lg",
-    glass: "bg-[var(--color-surface-1)]/80 backdrop-blur-sm border border-[var(--color-border)] rounded-xl",
+    default: "bg-white rounded-2xl shadow-[var(--shadow-card)] border border-[var(--color-border)]",
+    elevated: "bg-white rounded-2xl shadow-[var(--shadow-card-hover)] border border-[var(--color-border)]",
+    glass: "bg-white/80 backdrop-blur-sm rounded-2xl shadow-[var(--shadow-card)] border border-[var(--color-border)]",
   };
-  return <div className={cn(variants[variant], className)} {...props} />;
+  return <div className={cn(variants[variant], "hover:shadow-[var(--shadow-card-hover)] transition-shadow duration-200", className)} {...props} />;
 }
 
 export function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {

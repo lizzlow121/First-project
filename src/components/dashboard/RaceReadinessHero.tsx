@@ -19,7 +19,7 @@ export function RaceReadinessHero({ race, readinessScore }: RaceReadinessHeroPro
 
   if (!race) {
     return (
-      <div className="rounded-2xl bg-[var(--color-surface-1)] border border-[var(--color-border)] p-6 flex flex-col items-center justify-center gap-3 text-center min-h-[160px]">
+      <div className="rounded-2xl bg-white border border-[var(--color-border)] shadow-[var(--shadow-card)] p-6 flex flex-col items-center justify-center gap-3 text-center min-h-[160px]">
         <Trophy className="h-8 w-8 text-[var(--color-text-muted)]" />
         <p className="text-[var(--color-text-secondary)] text-sm">No upcoming race</p>
         <Link
@@ -49,7 +49,7 @@ export function RaceReadinessHero({ race, readinessScore }: RaceReadinessHeroPro
   const phase = getRacePhase(daysToRace, race.race_type);
 
   return (
-    <div className="rounded-2xl bg-[var(--color-surface-1)] border border-[var(--color-border)] p-6 space-y-5">
+    <div className="rounded-2xl bg-white border border-[var(--color-border)] shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-shadow duration-200 p-6 space-y-5">
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>

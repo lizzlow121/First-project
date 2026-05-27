@@ -21,7 +21,7 @@ export function TopBar({ userEmail, pageTitle }: TopBarProps) {
   };
 
   return (
-    <header className="flex h-14 items-center justify-between border-b border-[var(--color-border)] bg-[var(--color-surface-0)] px-6 shrink-0">
+    <header className="flex h-14 items-center justify-between border-b border-[var(--color-border)] bg-white px-6 shrink-0 shadow-[0_1px_0_0_var(--color-border)]">
       {pageTitle && (
         <h1 className="text-sm font-semibold text-[var(--color-text-primary)]">{pageTitle}</h1>
       )}
@@ -39,7 +39,7 @@ export function TopBar({ userEmail, pageTitle }: TopBarProps) {
         {open && (
           <>
             <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
-            <div className="absolute right-0 top-full mt-1 z-20 w-48 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-2)] shadow-lg overflow-hidden">
+            <div className="absolute right-0 top-full mt-1 z-20 w-48 rounded-xl border border-[var(--color-border)] bg-white shadow-[var(--shadow-card-hover)] overflow-hidden">
               <button
                 onClick={handleSignOut}
                 className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-3)] transition-colors"

@@ -20,7 +20,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       {/* Main content */}
       <div className="flex flex-1 flex-col min-w-0">
         <TopBar userEmail={user.email} />
-        <main className="flex-1 overflow-y-auto pb-20 md:pb-6">
+        <main className="flex-1 overflow-y-auto pb-20 md:pb-6 bg-[var(--color-surface-0)]">
           {children}
         </main>
       </div>

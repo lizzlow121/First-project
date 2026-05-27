@@ -39,11 +39,11 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-[var(--color-surface-0)]">
-      <div className="w-full max-w-sm space-y-6">
+    <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-[var(--color-surface-0)] to-[#E8EFF7]">
+      <div className="w-full max-w-sm space-y-6 bg-white rounded-2xl shadow-[var(--shadow-card-hover)] p-8 border border-[var(--color-border)]">
         {/* Logo */}
         <div className="flex flex-col items-center gap-3 text-center">
-          <div className="h-12 w-12 rounded-2xl bg-[var(--color-accent)] flex items-center justify-center">
+          <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-[#F04E23] to-[#FF8C00] flex items-center justify-center shadow-sm">
             <Zap className="h-6 w-6 text-white" />
           </div>
           <div>
@@ -87,7 +87,7 @@ export default function LoginPage() {
             <div className="w-full border-t border-[var(--color-border)]" />
           </div>
           <div className="relative flex justify-center text-xs text-[var(--color-text-muted)]">
-            <span className="bg-[var(--color-surface-0)] px-2">or</span>
+            <span className="bg-white px-2">or</span>
           </div>
         </div>
 

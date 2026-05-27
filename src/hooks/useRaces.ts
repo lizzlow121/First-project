@@ -22,7 +22,9 @@ export function useRaces() {
 
   const addRace = async (race: Omit<Race, "id" | "user_id" | "created_at">) => {
     const supabase = createClient();
-    const { data, error } = await supabase.from("races").insert(race).select().single();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { actual_finish_time_seconds, result_rating, result_notes, result_logged_at, share_slug, shared_at, ...insertData } = race;
+    const { data, error } = await supabase.from("races").insert(insertData).select().single();
     if (!error && data) setRaces((prev) => [...prev, data].sort((a, b) => a.race_date.localeCompare(b.race_date)));
     return { data, error };
   };

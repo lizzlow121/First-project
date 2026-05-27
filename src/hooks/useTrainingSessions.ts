@@ -27,24 +27,39 @@ export function useTrainingSessions(weekOf?: Date) {
   useEffect(() => { fetchSessions(); }, [fetchSessions]);
 
   const addSession = async (session: Omit<TrainingSession, "id" | "user_id" | "created_at">) => {
-    const supabase = createClient();
-    const { data, error } = await supabase.from("training_sessions").insert(session).select().single();
-    if (!error && data) setSessions((prev) => [...prev, data].sort((a, b) => a.session_date.localeCompare(b.session_date)));
-    return { data, error };
+    const res = await fetch("/api/training-sessions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(session),
+    });
+    const json = await res.json();
+    if (!res.ok) return { data: null, error: { message: json.error } };
+    setSessions((prev) => [...prev, json].sort((a, b) => a.session_date.localeCompare(b.session_date)));
+    return { data: json, error: null };
   };
 
   const updateSession = async (id: string, updates: Partial<TrainingSession>) => {
-    const supabase = createClient();
-    const { data, error } = await supabase.from("training_sessions").update(updates).eq("id", id).select().single();
-    if (!error && data) setSessions((prev) => prev.map((s) => (s.id === id ? data : s)));
-    return { data, error };
+    const res = await fetch("/api/training-sessions", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, ...updates }),
+    });
+    const json = await res.json();
+    if (!res.ok) return { data: null, error: { message: json.error } };
+    setSessions((prev) => prev.map((s) => (s.id === id ? json : s)));
+    return { data: json, error: null };
   };
 
   const deleteSession = async (id: string) => {
-    const supabase = createClient();
-    const { error } = await supabase.from("training_sessions").delete().eq("id", id);
-    if (!error) setSessions((prev) => prev.filter((s) => s.id !== id));
-    return { error };
+    const res = await fetch("/api/training-sessions", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+    const json = await res.json();
+    if (!res.ok) return { error: { message: json.error } };
+    setSessions((prev) => prev.filter((s) => s.id !== id));
+    return { error: null };
   };
 
   return { sessions, loading, weekStart, weekEnd, addSession, updateSession, deleteSession, refetch: fetchSessions };

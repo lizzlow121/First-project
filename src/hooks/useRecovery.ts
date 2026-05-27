@@ -27,18 +27,18 @@ export function useRecovery(days = 14) {
   const todayLog = logs.find((l) => l.log_date === todayISO()) ?? null;
 
   const upsertLog = async (log: Omit<RecoveryLog, "id" | "user_id" | "created_at">) => {
-    const supabase = createClient();
-    const { data, error } = await supabase
-      .from("recovery_logs")
-      .upsert(log, { onConflict: "user_id,log_date" })
-      .select().single();
-    if (!error && data) {
-      setLogs((prev) => {
-        const exists = prev.some((l) => l.log_date === data.log_date);
-        return exists ? prev.map((l) => l.log_date === data.log_date ? data : l) : [...prev, data];
-      });
-    }
-    return { data, error };
+    const res = await fetch("/api/recovery-logs", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(log),
+    });
+    const json = await res.json();
+    if (!res.ok) return { data: null, error: { message: json.error } };
+    setLogs((prev) => {
+      const exists = prev.some((l) => l.log_date === json.log_date);
+      return exists ? prev.map((l) => l.log_date === json.log_date ? json : l) : [...prev, json];
+    });
+    return { data: json, error: null };
   };
 
   const avgEnergy = logs.length

@@ -27,36 +27,47 @@ export function useSupplements() {
   const isTaken = (supplementId: string) => todayLogs.some((l) => l.supplement_id === supplementId);
 
   const toggleSupplement = async (supplementId: string) => {
-    const supabase = createClient();
     const alreadyTaken = isTaken(supplementId);
     if (alreadyTaken) {
-      const { error } = await supabase
-        .from("supplement_logs")
-        .delete()
-        .eq("supplement_id", supplementId)
-        .eq("taken_date", today);
-      if (!error) setTodayLogs((prev) => prev.filter((l) => l.supplement_id !== supplementId));
+      const res = await fetch("/api/supplement-logs", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ supplement_id: supplementId, taken_date: today }),
+      });
+      if (res.ok) setTodayLogs((prev) => prev.filter((l) => l.supplement_id !== supplementId));
     } else {
-      const { data, error } = await supabase
-        .from("supplement_logs")
-        .insert({ supplement_id: supplementId, taken_date: today })
-        .select().single();
-      if (!error && data) setTodayLogs((prev) => [...prev, data]);
+      const res = await fetch("/api/supplement-logs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ supplement_id: supplementId, taken_date: today }),
+      });
+      const json = await res.json();
+      if (res.ok && json) setTodayLogs((prev) => [...prev, json]);
     }
   };
 
   const addSupplement = async (s: Omit<Supplement, "id" | "user_id" | "created_at" | "active">) => {
-    const supabase = createClient();
-    const { data, error } = await supabase.from("supplements").insert({ ...s, active: true }).select().single();
-    if (!error && data) setSupplements((prev) => [...prev, data]);
-    return { data, error };
+    const res = await fetch("/api/supplements", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(s),
+    });
+    const json = await res.json();
+    if (!res.ok) return { data: null, error: { message: json.error } };
+    setSupplements((prev) => [...prev, json]);
+    return { data: json, error: null };
   };
 
   const deactivateSupplement = async (id: string) => {
-    const supabase = createClient();
-    const { error } = await supabase.from("supplements").update({ active: false }).eq("id", id);
-    if (!error) setSupplements((prev) => prev.filter((s) => s.id !== id));
-    return { error };
+    const res = await fetch("/api/supplements", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, active: false }),
+    });
+    const json = await res.json();
+    if (!res.ok) return { error: { message: json.error } };
+    setSupplements((prev) => prev.filter((s) => s.id !== id));
+    return { error: null };
   };
 
   const takenCount = todayLogs.length;

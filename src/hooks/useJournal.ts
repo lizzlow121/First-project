@@ -27,20 +27,20 @@ export function useJournal() {
   const todayEvening = entries.find((e) => e.entry_date === today && e.entry_type === "evening") ?? null;
 
   const upsertEntry = async (entry: Omit<JournalEntry, "id" | "user_id" | "created_at" | "updated_at">) => {
-    const supabase = createClient();
-    const { data, error } = await supabase
-      .from("journal_entries")
-      .upsert({ ...entry, updated_at: new Date().toISOString() }, { onConflict: "user_id,entry_date,entry_type" })
-      .select().single();
-    if (!error && data) {
-      setEntries((prev) => {
-        const exists = prev.some((e) => e.entry_date === data.entry_date && e.entry_type === data.entry_type);
-        return exists
-          ? prev.map((e) => e.entry_date === data.entry_date && e.entry_type === data.entry_type ? data : e)
-          : [data, ...prev];
-      });
-    }
-    return { data, error };
+    const res = await fetch("/api/journal", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(entry),
+    });
+    const json = await res.json();
+    if (!res.ok) return { data: null, error: { message: json.error } };
+    setEntries((prev) => {
+      const exists = prev.some((e) => e.entry_date === json.entry_date && e.entry_type === json.entry_type);
+      return exists
+        ? prev.map((e) => e.entry_date === json.entry_date && e.entry_type === json.entry_type ? json : e)
+        : [json, ...prev];
+    });
+    return { data: json, error: null };
   };
 
   return { entries, todayMorning, todayEvening, loading, upsertEntry, refetch: fetchEntries };

@@ -29,36 +29,35 @@ export function useWeightLogs(days = 30) {
 
   const addLog = useCallback(
     async (weight_kg: number, notes?: string) => {
-      const supabase = createClient();
       const today = format(new Date(), "yyyy-MM-dd");
-      const { data, error } = await supabase
-        .from("weight_logs")
-        .upsert(
-          { log_date: today, weight_kg, notes: notes ?? null },
-          { onConflict: "user_id,log_date" }
-        )
-        .select()
-        .single();
-      if (!error && data) {
-        setLogs((prev) => {
-          const exists = prev.some((l) => l.log_date === data.log_date);
-          return exists
-            ? prev.map((l) => (l.log_date === data.log_date ? data : l))
-            : [data, ...prev];
-        });
-      }
-      return { data, error };
+      const res = await fetch("/api/weight-logs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ log_date: today, weight_kg, notes: notes ?? null }),
+      });
+      const json = await res.json();
+      if (!res.ok) return { data: null, error: { message: json.error } };
+      setLogs((prev) => {
+        const exists = prev.some((l) => l.log_date === json.log_date);
+        return exists
+          ? prev.map((l) => (l.log_date === json.log_date ? json : l))
+          : [json, ...prev];
+      });
+      return { data: json, error: null };
     },
     []
   );
 
   const deleteLog = useCallback(async (id: string) => {
-    const supabase = createClient();
-    const { error } = await supabase.from("weight_logs").delete().eq("id", id);
-    if (!error) {
-      setLogs((prev) => prev.filter((l) => l.id !== id));
-    }
-    return { error };
+    const res = await fetch("/api/weight-logs", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+    const json = await res.json();
+    if (!res.ok) return { error: { message: json.error } };
+    setLogs((prev) => prev.filter((l) => l.id !== id));
+    return { error: null };
   }, []);
 
   const trend = useMemo<WeightTrend>(() => {

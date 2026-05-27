@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { PaceReferenceCard } from "@/components/races/PaceReferenceCard";
 import { GeneratePlanButton } from "@/components/races/GeneratePlanButton";
+import { RaceResultForm } from "@/components/races/RaceResultForm";
 import { MapPin, Calendar, Target, Trophy, Activity } from "lucide-react";
 import { format } from "date-fns";
 import type { Race, TrainingSession } from "@/types";
@@ -265,6 +266,9 @@ export default async function RaceDetailPage({
       {!isPast && (
         <GeneratePlanButton race={race} />
       )}
+
+      {/* Race result (post-race) */}
+      {isPast && <RaceResultForm race={race} />}
 
       {/* Recent sessions */}
       <Card>

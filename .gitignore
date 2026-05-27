@@ -40,3 +40,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+.claude/skills/apple-bento-grid/scripts/node_modules/
+.claude/skills/apple-bento-grid/scripts/_local-shots.mjs
+.env.local

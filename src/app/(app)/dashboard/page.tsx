@@ -4,6 +4,7 @@ import { DimensionCard } from "@/components/dashboard/DimensionCard";
 import { WeeklyTrainingCard } from "@/components/dashboard/WeeklyTrainingCard";
 import { MacroRingCard } from "@/components/dashboard/MacroRingCard";
 import { MotivationCard } from "@/components/dashboard/MotivationCard";
+import { HydrationCard } from "@/components/dashboard/HydrationCard";
 import { getDailyQuote } from "@/lib/quotes";
 import { getDailyPodcast } from "@/lib/podcasts";
 import {
@@ -117,6 +118,7 @@ export default async function DashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <WeeklyTrainingCard sessions={weekSessions} />
         <MacroRingCard totals={totals} goals={goals} />
+        <HydrationCard />
         <MotivationCard quote={quoteResult} podcast={podcast} />
       </div>
     </div>

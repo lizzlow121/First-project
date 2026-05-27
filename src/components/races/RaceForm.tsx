@@ -116,6 +116,10 @@ export function RaceForm({ defaultValues, onSubmit, onCancel, loading }: RaceFor
       goal_time_seconds: values.goal_time ? parseGoalTime(values.goal_time) : null,
       current_fitness: (values.current_fitness as FitnessLevel) ?? null,
       notes: values.notes ?? null,
+      actual_finish_time_seconds: null,
+      result_rating: null,
+      result_notes: null,
+      result_logged_at: null,
     });
   };
 

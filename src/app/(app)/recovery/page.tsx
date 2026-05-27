@@ -3,6 +3,7 @@
 import { useRecovery } from "@/hooks/useRecovery";
 import { RecoveryLogForm } from "@/components/recovery/RecoveryLogForm";
 import { SupplementTracker } from "@/components/recovery/SupplementTracker";
+import { BodyMeasurementsForm } from "@/components/recovery/BodyMeasurementsForm";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { format, subDays } from "date-fns";
 
@@ -114,6 +115,9 @@ export default function RecoveryPage() {
           <RecoveryLogForm />
         </CardContent>
       </Card>
+
+      {/* Body Measurements */}
+      <BodyMeasurementsForm />
 
       {/* Supplements */}
       <Card>

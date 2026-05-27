@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { useNutrition } from "@/hooks/useNutrition";
+import { useRaces } from "@/hooks/useRaces";
 import { MacroProgressBars } from "@/components/nutrition/MacroProgressBars";
 import { FoodSearchModal } from "@/components/nutrition/FoodSearchModal";
+import { CarbLoadBanner, getCarbLoadedGoals, isInCarbLoadWindow } from "@/components/nutrition/CarbLoadBanner";
 import { Button } from "@/components/ui/Button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { Plus, Trash2, Settings } from "lucide-react";
@@ -19,6 +21,8 @@ const MEALS: { type: MealType; label: string; emoji: string }[] = [
 
 export default function NutritionPage() {
   const { foodLogs, goals, totals, loading, addFoodLog, deleteFoodLog } = useNutrition();
+  const { nextRace } = useRaces();
+  const effectiveGoals = goals && isInCarbLoadWindow(nextRace) ? getCarbLoadedGoals(goals) : goals;
   const [showSearch, setShowSearch] = useState(false);
   const [activeMeal, setActiveMeal] = useState<MealType>("breakfast");
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -55,9 +59,12 @@ export default function NutritionPage() {
         </Link>
       </div>
 
+      {/* Carb-load banner */}
+      <CarbLoadBanner nextRace={nextRace} goals={goals} />
+
       {/* Macro totals */}
       {!loading && (
-        <MacroProgressBars totals={totals} goals={goals} />
+        <MacroProgressBars totals={totals} goals={effectiveGoals} />
       )}
 
       {loading && (

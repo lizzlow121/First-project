@@ -31,13 +31,16 @@ export async function middleware(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
   const isAuthRoute = pathname.startsWith("/login") || pathname.startsWith("/signup");
-  const isAppRoute = pathname.startsWith("/dashboard") ||
+  const isPreview = pathname.startsWith("/preview");
+  const isAppRoute = !isPreview && (
+    pathname.startsWith("/dashboard") ||
     pathname.startsWith("/races") ||
     pathname.startsWith("/training") ||
     pathname.startsWith("/nutrition") ||
     pathname.startsWith("/recovery") ||
     pathname.startsWith("/integrations") ||
-    pathname.startsWith("/journal");
+    pathname.startsWith("/journal")
+  );
 
   if (!user && isAppRoute) {
     const url = request.nextUrl.clone();

@@ -32,6 +32,10 @@ export interface Race {
   goal_time_seconds: number | null;
   current_fitness: FitnessLevel | null;
   notes: string | null;
+  actual_finish_time_seconds: number | null;
+  result_rating: number | null;
+  result_notes: string | null;
+  result_logged_at: string | null;
   created_at: string;
 }
 
@@ -173,7 +177,31 @@ export interface UserProfile {
   avatar_url: string | null;
   weight_goal_kg: number | null;
   pace_unit: "km" | "mile";
+  hydration_goal_ml: number;
+  carb_load_enabled: boolean;
   created_at: string;
+}
+
+export interface BodyMeasurement {
+  id: string;
+  user_id: string;
+  log_date: string;
+  weight_kg: number | null;
+  body_fat_pct: number | null;
+  waist_cm: number | null;
+  chest_cm: number | null;
+  arm_cm: number | null;
+  thigh_cm: number | null;
+  notes: string | null;
+  created_at: string;
+}
+
+export interface HydrationLog {
+  id: string;
+  user_id: string;
+  log_date: string;
+  amount_ml: number;
+  logged_at: string;
 }
 
 // USDA food search result

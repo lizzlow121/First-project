@@ -6,9 +6,11 @@ create table profiles (
   email           text not null,
   full_name       text,
   avatar_url      text,
-  weight_goal_kg  numeric(5,2),
-  pace_unit       text not null default 'km' check (pace_unit in ('km', 'mile')),
-  created_at      timestamptz default now()
+  weight_goal_kg      numeric(5,2),
+  pace_unit           text not null default 'km' check (pace_unit in ('km', 'mile')),
+  hydration_goal_ml   integer not null default 3000,
+  carb_load_enabled   boolean not null default true,
+  created_at          timestamptz default now()
 );
 alter table profiles enable row level security;
 create policy "Users own their profile" on profiles for all using (auth.uid() = id);

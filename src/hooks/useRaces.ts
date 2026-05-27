@@ -21,26 +21,41 @@ export function useRaces() {
   useEffect(() => { fetchRaces(); }, [fetchRaces]);
 
   const addRace = async (race: Omit<Race, "id" | "user_id" | "created_at">) => {
-    const supabase = createClient();
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { actual_finish_time_seconds, result_rating, result_notes, result_logged_at, share_slug, shared_at, ...insertData } = race;
-    const { data, error } = await supabase.from("races").insert(insertData).select().single();
-    if (!error && data) setRaces((prev) => [...prev, data].sort((a, b) => a.race_date.localeCompare(b.race_date)));
-    return { data, error };
+    const res = await fetch("/api/races", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(insertData),
+    });
+    const json = await res.json();
+    if (!res.ok) return { data: null, error: { message: json.error } };
+    setRaces((prev) => [...prev, json].sort((a, b) => a.race_date.localeCompare(b.race_date)));
+    return { data: json, error: null };
   };
 
   const updateRace = async (id: string, updates: Partial<Race>) => {
-    const supabase = createClient();
-    const { data, error } = await supabase.from("races").update(updates).eq("id", id).select().single();
-    if (!error && data) setRaces((prev) => prev.map((r) => (r.id === id ? data : r)));
-    return { data, error };
+    const res = await fetch("/api/races", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, ...updates }),
+    });
+    const json = await res.json();
+    if (!res.ok) return { data: null, error: { message: json.error } };
+    setRaces((prev) => prev.map((r) => (r.id === id ? json : r)));
+    return { data: json, error: null };
   };
 
   const deleteRace = async (id: string) => {
-    const supabase = createClient();
-    const { error } = await supabase.from("races").delete().eq("id", id);
-    if (!error) setRaces((prev) => prev.filter((r) => r.id !== id));
-    return { error };
+    const res = await fetch("/api/races", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+    const json = await res.json();
+    if (!res.ok) return { error: { message: json.error } };
+    setRaces((prev) => prev.filter((r) => r.id !== id));
+    return { error: null };
   };
 
   const nextRace = races.find((r) => new Date(r.race_date) >= new Date()) ?? null;

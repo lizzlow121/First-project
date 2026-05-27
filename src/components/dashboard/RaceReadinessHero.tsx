@@ -2,10 +2,12 @@
 
 import { useCountdown } from "@/hooks/useCountdown";
 import type { Race } from "@/types";
-import { formatGoalTime, weeksUntil } from "@/lib/utils";
+import { formatGoalTime } from "@/lib/utils";
 import { Trophy, Clock } from "lucide-react";
 import Link from "next/link";
 import { SandTimer } from "./SandTimer";
+import { WeeklyFocusBar } from "./WeeklyFocusBar";
+import { getRacePhase } from "@/lib/race-phase";
 
 interface RaceReadinessHeroProps {
   race: Race | null;
@@ -40,7 +42,11 @@ export function RaceReadinessHero({ race, readinessScore }: RaceReadinessHeroPro
     readinessScore >= 40 ? "Making progress — stay consistent" :
     "Behind pace — time to focus";
 
-  const weeks = weeksUntil(race.race_date);
+  const daysToRace = Math.max(
+    0,
+    (new Date(race.race_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+  );
+  const phase = getRacePhase(daysToRace, race.race_type);
 
   return (
     <div className="rounded-2xl bg-[var(--color-surface-1)] border border-[var(--color-border)] p-6 space-y-5">
@@ -72,11 +78,12 @@ export function RaceReadinessHero({ race, readinessScore }: RaceReadinessHeroPro
           <p className="text-sm text-[var(--color-text-secondary)] tabular-nums mt-2">
             {countdown.hours}h {countdown.minutes}m {countdown.seconds.toString().padStart(2, "0")}s
           </p>
-          <p className="text-xs text-[var(--color-text-muted)] mt-1">
-            {weeks} week{weeks !== 1 ? "s" : ""} to go
-          </p>
+          <p className="text-xs text-[var(--color-text-muted)] mt-1">{phase.tWeeks}</p>
         </div>
       </div>
+
+      {/* Weekly focus */}
+      <WeeklyFocusBar phase={phase} />
 
       {/* Readiness bar */}
       <div className="space-y-1.5">

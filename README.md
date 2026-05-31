@@ -40,8 +40,11 @@ cp profile.example.yaml profile.yaml   # then describe your skills
 # Run the freelance workflow once:
 python -m src.cli run freelance_daily
 
-# Review and approve drafted proposals:
+# Review and approve drafted proposals (terminal):
 python -m src.cli review
+
+# ...or use the web dashboard (approve/reject by click, see goal progress):
+python -m src.cli web        # then open http://127.0.0.1:5000
 
 # Log income you actually earned, and see goal progress:
 python -m src.cli earn 25 --note "Won logo gig"

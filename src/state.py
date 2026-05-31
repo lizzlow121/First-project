@@ -62,3 +62,21 @@ def earned_today() -> float:
 
 def earned_total() -> float:
     return round(sum(e["amount"] for e in load()["earnings"]), 2)
+
+
+def set_status(queue_id: str, status: str) -> bool:
+    """Mark a queued proposal approved/rejected. Returns True if found."""
+    data = load()
+    for q in data["queue"]:
+        if q["queue_id"] == queue_id:
+            q["status"] = status
+            save(data)
+            return True
+    return False
+
+
+def queue_by_status(status: str | None = None) -> list[dict[str, Any]]:
+    queue = load()["queue"]
+    if status is None:
+        return queue
+    return [q for q in queue if q["status"] == status]

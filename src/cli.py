@@ -2,6 +2,7 @@
 
   python -m src.cli run <workflow>     Run a workflow (e.g. freelance_daily)
   python -m src.cli review             Approve/reject queued proposals
+  python -m src.cli web                Launch the web dashboard
   python -m src.cli earn <amount>      Log income you actually earned
   python -m src.cli status             Show goal progress and the queue
   python -m src.cli list               List available workflows
@@ -75,6 +76,12 @@ def _cmd_earn(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_web(args: argparse.Namespace) -> int:
+    from src.web import serve
+    serve(host=args.host, port=args.port)
+    return 0
+
+
 def _cmd_status(_: argparse.Namespace) -> int:
     goal = config.daily_goal()
     data = state.load()
@@ -101,6 +108,11 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("list", help="List workflows").set_defaults(func=_cmd_list)
     sub.add_parser("review", help="Review queued proposals").set_defaults(func=_cmd_review)
     sub.add_parser("status", help="Show goal progress").set_defaults(func=_cmd_status)
+
+    p_web = sub.add_parser("web", help="Launch the web dashboard")
+    p_web.add_argument("--host", default="127.0.0.1")
+    p_web.add_argument("--port", type=int, default=5000)
+    p_web.set_defaults(func=_cmd_web)
 
     p_earn = sub.add_parser("earn", help="Log earned income")
     p_earn.add_argument("amount", type=float)

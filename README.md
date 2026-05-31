@@ -34,8 +34,14 @@ without touching the engine. See `workflows/freelance_daily.yaml`.
 
 ```bash
 pip install -r requirements.txt
-cp .env.example .env          # then fill in your keys
-cp profile.example.yaml profile.yaml   # then describe your skills
+
+# Easiest: interactive wizard that creates .env + profile.yaml for you,
+# then optionally runs your first cycle.
+python -m src.cli setup
+
+# (Or set it up by hand instead of the wizard:)
+#   cp .env.example .env                     # then fill in your keys
+#   cp profile.example.yaml profile.yaml     # then describe your skills
 
 # Run the freelance workflow once:
 python -m src.cli run freelance_daily

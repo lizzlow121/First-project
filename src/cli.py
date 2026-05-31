@@ -1,5 +1,6 @@
 """Command-line interface.
 
+  python -m src.cli setup              First-run wizard (keys + profile)
   python -m src.cli run <workflow>     Run a workflow (e.g. freelance_daily)
   python -m src.cli review             Approve/reject queued proposals
   python -m src.cli web                Launch the web dashboard
@@ -15,6 +16,11 @@ import sys
 
 from src import config, state
 from src.engine import run_workflow
+
+
+def _cmd_setup(_: argparse.Namespace) -> int:
+    from src.setup_wizard import run_setup
+    return run_setup()
 
 
 def _cmd_run(args: argparse.Namespace) -> int:
@@ -100,6 +106,8 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="autopilot", description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest="cmd", required=True)
+
+    sub.add_parser("setup", help="First-run wizard").set_defaults(func=_cmd_setup)
 
     p_run = sub.add_parser("run", help="Run a workflow")
     p_run.add_argument("workflow")

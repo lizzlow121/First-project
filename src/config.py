@@ -69,3 +69,28 @@ def load_profile() -> dict[str, Any]:
         return _DEMO_PROFILE
     with open(path, encoding="utf-8") as f:
         return yaml.safe_load(f) or _DEMO_PROFILE
+
+
+_DEMO_CONTENT: dict[str, Any] = {
+    "niches": ["home coffee gear", "productivity apps"],
+    "affiliate_links": [
+        {"keyword": "coffee", "label": "the grinder I recommend",
+         "url": "https://example.com/aff/grinder?ref=you"},
+        {"keyword": "productivity", "label": "the app I actually use",
+         "url": "https://example.com/aff/app?ref=you"},
+    ],
+    "platform": "blog",
+    "format": "social",
+    "posts_per_run": 3,
+    "disclosure": "Disclosure: contains affiliate links. I may earn a commission at no extra cost to you.",
+}
+
+
+def load_content() -> dict[str, Any]:
+    path = os.path.join(_ROOT, "content.yaml")
+    if not os.path.exists(path):
+        print("⚠️  No content.yaml found — using demo content config. "
+              "Copy content.example.yaml to content.yaml to customize.")
+        return _DEMO_CONTENT
+    with open(path, encoding="utf-8") as f:
+        return yaml.safe_load(f) or _DEMO_CONTENT

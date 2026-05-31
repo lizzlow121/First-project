@@ -1,0 +1,28 @@
+# Copy to content.yaml and customize. Drives the content/affiliate workflow.
+# This is the second income engine: it auto-drafts posts that weave in your
+# affiliate links, then queues them for your approval (you publish manually).
+
+# Niches/topics you create content about.
+niches:
+  - "home coffee gear"
+  - "productivity apps"
+
+# Your affiliate links. A link is only inserted when its keyword appears in the
+# drafted post, so posts stay relevant (no link stuffing).
+affiliate_links:
+  - { keyword: "coffee",       label: "the grinder I recommend", url: "https://example.com/aff/grinder?ref=you" }
+  - { keyword: "productivity", label: "the app I actually use",  url: "https://example.com/aff/app?ref=you" }
+
+# Where you intend to publish (informational — you post manually after approving).
+platform: "blog"        # blog | twitter | linkedin
+
+# Output format for each draft.
+format: "social"        # social | blog
+
+# How many posts to draft per run.
+posts_per_run: 3
+
+# Appended to EVERY post. The FTC requires clear disclosure of affiliate links.
+# Do not remove this — publishing affiliate links without disclosure is illegal
+# in many jurisdictions and gets accounts banned.
+disclosure: "Disclosure: contains affiliate links. I may earn a commission at no extra cost to you."

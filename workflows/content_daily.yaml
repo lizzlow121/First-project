@@ -1,0 +1,18 @@
+# Second income engine: a content/affiliate workflow.
+# Same dynamic engine, different steps. Drafts are added to the SAME review
+# queue as freelance proposals, so `python -m src.cli review` and the web
+# dashboard handle both. You publish each approved post manually.
+
+name: content_daily
+description: "Generate post ideas, draft them, insert affiliate links + disclosure, queue for review."
+
+steps:
+  - uses: generate_ideas    # brainstorm post angles from content.yaml niches
+
+  - uses: draft_content     # AI-writes each post body
+
+  - uses: add_affiliate_links   # weave in relevant affiliate links + FTC disclosure
+
+  - uses: enqueue_review    # same approval queue as the freelance workflow
+
+  - uses: report            # progress toward the daily goal

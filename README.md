@@ -23,6 +23,17 @@ daily earnings goal (default: **$10/day**).
   software can keep. Realistically you may need to send 5–15 proposals to land
   one small gig — the system just makes sending them nearly free in effort.
 
+## Income engines (workflows)
+
+Two are included; both feed the same review queue and dashboard:
+
+- **`freelance_daily`** — discovers gigs, scores them against your skills, drafts
+  proposals. You approve, then apply on-platform. Never auto-submits (ToS-safe).
+- **`content_daily`** — drafts useful posts for your niches, weaves in *relevant*
+  affiliate links, and appends an FTC disclosure to every post. You approve, then
+  publish manually. Links are only inserted when their keyword fits the post —
+  no spam, and the disclosure is mandatory (don't remove it).
+
 ## The "dynamic" part
 
 Workflows are defined in YAML (`workflows/*.yaml`), not hardcoded. Each workflow
@@ -45,6 +56,10 @@ python -m src.cli setup
 
 # Run the freelance workflow once:
 python -m src.cli run freelance_daily
+
+# ...or the content/affiliate workflow (second income engine):
+cp content.example.yaml content.yaml    # then add your niches + affiliate links
+python -m src.cli run content_daily
 
 # Review and approve drafted proposals (terminal):
 python -m src.cli review

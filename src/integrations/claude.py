@@ -66,3 +66,53 @@ def draft_proposal(gig: dict[str, Any], profile: dict[str, Any]) -> str:
     except Exception as e:
         print(f"   (Claude API error, using template: {e})")
         return _template_proposal(gig, profile)
+
+
+_CONTENT_SYSTEM = (
+    "You are a sharp content writer. Write genuinely useful, specific content "
+    "that a real person would want to read — no filler, no 'in today's fast-paced "
+    "world'. Recommendations must be honest. If a format is 'social', write a "
+    "punchy 2-4 sentence post. If 'blog', write 4-6 tight paragraphs with a clear "
+    "takeaway. Naturally mention relevant products by category so affiliate links "
+    "fit, but never fabricate fake personal claims."
+)
+
+
+def _template_content(idea: str, niche: str, fmt: str) -> str:
+    if fmt == "blog":
+        return (
+            f"# {idea}\n\n"
+            f"If you're into {niche}, here's what actually matters.\n\n"
+            f"Most advice overcomplicates it. Start with the basics, buy quality once, "
+            f"and skip the gimmicks. A good setup pays for itself in time saved.\n\n"
+            f"Takeaway: pick one upgrade that removes daily friction, and ignore the rest."
+        )
+    return (
+        f"{idea} 👇\n\n"
+        f"After a lot of trial and error with {niche}, the lesson is simple: "
+        f"buy quality once instead of cheap twice. One good upgrade changed my daily routine."
+    )
+
+
+def draft_content(idea: str, niche: str, fmt: str) -> str:
+    if not config.has_api_key() or Anthropic is None:
+        return _template_content(idea, niche, fmt)
+
+    client = Anthropic(api_key=config.get("ANTHROPIC_API_KEY"))
+    prompt = (
+        f"Niche: {niche}\n"
+        f"Post idea/angle: {idea}\n"
+        f"Format: {fmt}\n\n"
+        f"Write the post now."
+    )
+    try:
+        resp = client.messages.create(
+            model=config.claude_model(),
+            max_tokens=700,
+            system=_CONTENT_SYSTEM,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        return resp.content[0].text.strip()
+    except Exception as e:
+        print(f"   (Claude API error, using template: {e})")
+        return _template_content(idea, niche, fmt)

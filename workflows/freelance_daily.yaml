@@ -1,0 +1,21 @@
+# A dynamic workflow: an ordered list of named steps. The engine runs them in
+# order, passing a shared `context` dict from one step to the next. Reorder,
+# remove, or add steps freely — each `uses` name maps to a registered step in
+# src/steps/. No engine code changes needed.
+
+name: freelance_daily
+description: "Discover remote gigs, score them, draft proposals, and queue for review."
+
+steps:
+  - uses: fetch_gigs
+    with:
+      sources: ["remotive", "weworkremotely"]
+      max_per_source: 40
+
+  - uses: score_gigs        # ranks gigs against profile.yaml skills
+
+  - uses: draft_proposals   # AI-drafts proposals for the top matches
+
+  - uses: enqueue_review    # adds drafts to the approval queue
+
+  - uses: report            # prints a summary + progress toward the daily goal

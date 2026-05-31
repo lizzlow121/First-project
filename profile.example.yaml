@@ -1,0 +1,31 @@
+# Copy to profile.yaml and describe yourself. This drives gig scoring and the
+# tone of AI-drafted proposals. The more specific, the better the matches.
+
+name: Your Name
+headline: "Freelance web developer & content writer"
+
+# Skills the system will match gigs against. Add weights (1-5) to prioritize.
+skills:
+  - { name: "python",        weight: 5 }
+  - { name: "web scraping",  weight: 4 }
+  - { name: "react",         weight: 3 }
+  - { name: "copywriting",   weight: 3 }
+  - { name: "data entry",    weight: 2 }
+
+# Keywords that should make the system SKIP a gig (scams, bad fits).
+exclude:
+  - "unpaid"
+  - "equity only"
+  - "crypto airdrop"
+
+# Minimum acceptable budget in USD. Gigs below this (when budget is known) are dropped.
+min_budget_usd: 20
+
+# A short bio used in proposals. Keep it real — clients can tell.
+bio: >
+  I build small web tools and write clear, conversion-focused copy. I turn
+  things around fast and communicate clearly. Recent work includes scraping
+  pipelines and landing-page copy for early-stage startups.
+
+# How many of the top-scored gigs to draft proposals for each run.
+proposals_per_run: 5

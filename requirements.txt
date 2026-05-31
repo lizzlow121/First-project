@@ -1,0 +1,9 @@
+# Core dependencies — required.
+anthropic>=0.40.0
+PyYAML>=6.0
+requests>=2.31.0
+
+# Optional: enables the "weworkremotely" RSS source. The system runs fine
+# without it (that source is just skipped). Install with:
+#   pip install feedparser
+# feedparser>=6.0.0
